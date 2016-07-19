@@ -1,0 +1,17 @@
+{
+  "name": "buildlight-server",
+  "version": "1.0.0",
+  "description": "Tiny http server which can be used to control build traffic lights connected to the same machine",
+  "repository": "https://github.com/sjacobs/buildlights-server.git",
+  "main": "server.js",
+  "dependencies": {
+    "httpdispatcher": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Steffen Jacobs",
+  "license": "ISC"
+}

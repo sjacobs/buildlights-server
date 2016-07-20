@@ -1,5 +1,4 @@
-var http = require('http');
-var dispatcher = require('httpdispatcher');
+var express = require('express');
 var execFile = require('child_process').execFile;
 
 const PORT = process.argv[2] || 54321;
@@ -9,63 +8,55 @@ const DEVICE_MAPPING = {
   'qa': '900220'
 };
 
-dispatcher.setStatic('static');
-dispatcher.setStaticDirname('static');
+var app = express();
 
-dispatcher.onGet('/dev/red', function(req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end(triggerBuildLights('dev', 0));
-});
-
-dispatcher.onGet('/dev/yellow', function(req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end(triggerBuildLights('dev', 1));
-});
-
-dispatcher.onGet('/dev/green', function(req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end(triggerBuildLights('dev', 2));
+app.listen(PORT, function() {
+  console.log("Server started on port %s", PORT);
 });
 
 
-dispatcher.onGet('/qa/red', function(req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end(triggerBuildLights('qa', 0));
+const STATUS_MAPPING = {
+  'ok':       ['0','0','1'],
+  'building': ['*', '1', '*'],
+  'warn':     ['1', '1', '1'],
+  'nok':      ['1', '0', '0']
+}
+
+app.get('/:env/:state', function (req, res) {
+  try {
+    var state = req.params.state;
+    var env = req.params.env;
+  
+    var lightSettings = STATUS_MAPPING[state];
+    lightSettings.forEach(function(setting, index) {
+      var settingValue = parseSetting(setting);
+      if (settingValue) {
+        triggerBuildLight(DEVICE_MAPPING[env], index, settingValue);
+      }
+    });
+    res.send("ok!");
+  } catch(err) {
+    res.send("error: " + err);
+  }
 });
 
-dispatcher.onGet('/qa/yellow', function(req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end(triggerBuildLights('qa', 1));
-});
+function parseSetting(setting) {
+  if (setting === '0' || setting === '1') {
+    return parseInt(setting);
+  }
+  return undefined;
+}
 
-dispatcher.onGet('/qa/green', function(req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end(triggerBuildLights('qa', 2));
-});
-
-
-function triggerBuildLights(deviceNumber, value) {
-  execFile('sudo', [CLEWARE_CONTROL, '-c', '1', '-d', DEVICE_MAPPING[deviceNumber], '-as', value, 1], function(error, stdout, stderr) { 
+function triggerBuildLight(deviceNumber, lightnumber, onOrOff) {
+  console.log('Setting %s, light number %s to %s', deviceNumber, lightnumber, onOrOff);
+  execFile('sudo', [CLEWARE_CONTROL, '-c', '1', '-d', DEVICE_MAPPING[deviceNumber], '-as', lightnumber, onOrOff], function(error, stdout, stderr) { 
     console.log('Executing...');
-    console.log(stderr); 	  
+    console.log(stderr);    
     console.log(stdout);
     if (error) {
       console.log(error);
     }
   });
     
-  return "ok! device " + deviceNumber + " set to " + value;
 }
 
-var server = http.createServer(function(req, res) {
-  console.log("Request: %s", req.url);
-  try {
-    dispatcher.dispatch(req, res);
-  } catch(err) {
-    console.log(err);
-  }
-});
-
-server.listen(PORT, function() {
-  console.log("Server started on port %s", PORT);
-});

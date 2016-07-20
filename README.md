@@ -6,6 +6,7 @@ In our build envirnoment, we wanted to show the current build status of our pipe
 
 1. A hardware traffic build light from https://www.vanheusden.com/clewarecontrol/
 2. The official clewarecontrol driver and tools from https://www.vanheusden.com/clewarecontrol/files
+3. node-js and npm
 
 ## Usage
 

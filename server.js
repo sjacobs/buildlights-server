@@ -3,10 +3,10 @@ var dispatcher = require('httpdispatcher');
 var execFile = require('child_process').execFile;
 
 const PORT = process.argv[2] || 54321;
-const CLEWARE_CONTROL = './clewarecontrol';
+const CLEWARE_CONTROL = 'clewarecontrol';
 const DEVICE_MAPPING = {
-  'dev': 'abcd',
-  'qa': '3456'
+  'dev': '900221',
+  'qa': '900220'
 };
 
 dispatcher.setStatic('static');
@@ -45,9 +45,9 @@ dispatcher.onGet('/qa/green', function(req, res) {
 
 
 function triggerBuildLights(deviceNumber, value) {
-  execFile(CLEWARE_CONTROL, ['-c', '1', '-d', DEVICE_MAPPING[deviceNumber]], function(error, stdout, stderr) { 
+  execFile('sudo', [CLEWARE_CONTROL, '-c', '1', '-d', DEVICE_MAPPING[deviceNumber], '-as', value, 1], function(error, stdout, stderr) { 
     console.log('Executing...');
-    
+    console.log(stderr); 	  
     console.log(stdout);
     if (error) {
       console.log(error);
@@ -56,11 +56,6 @@ function triggerBuildLights(deviceNumber, value) {
     
   return "ok! device " + deviceNumber + " set to " + value;
 }
-
-
-
-
-
 
 var server = http.createServer(function(req, res) {
   console.log("Request: %s", req.url);

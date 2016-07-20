@@ -16,7 +16,8 @@ app.listen(PORT, function() {
 
 
 const STATUS_MAPPING = {
-  'ok':       ['0','0','1'],
+  'off'       ['0', '0', '0'], 
+  'ok':       ['0', '0', '1'],
   'building': ['*', '1', '*'],
   'warn':     ['1', '1', '1'],
   'nok':      ['1', '0', '0']
@@ -24,13 +25,15 @@ const STATUS_MAPPING = {
 
 app.get('/:env/:state', function (req, res) {
   try {
+    // state can be ok, building, warn or nok
     var state = req.params.state;
+    // env can be dev or qa
     var env = req.params.env;
   
     var lightSettings = STATUS_MAPPING[state];
     lightSettings.forEach(function(setting, index) {
       var settingValue = parseSetting(setting);
-      if (settingValue) {
+      if (settingValue === 0 || settingValue === 1) {
         triggerBuildLight(DEVICE_MAPPING[env], index, settingValue);
       }
     });

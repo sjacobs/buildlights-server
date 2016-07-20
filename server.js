@@ -16,7 +16,7 @@ app.listen(PORT, function() {
 
 
 const STATUS_MAPPING = {
-  'off'       ['0', '0', '0'], 
+  'off':       ['0', '0', '0'], 
   'ok':       ['0', '0', '1'],
   'building': ['*', '1', '*'],
   'warn':     ['1', '1', '1'],
@@ -52,7 +52,7 @@ function parseSetting(setting) {
 
 function triggerBuildLight(deviceNumber, lightnumber, onOrOff) {
   console.log('Setting %s, light number %s to %s', deviceNumber, lightnumber, onOrOff);
-  execFile('sudo', [CLEWARE_CONTROL, '-c', '1', '-d', DEVICE_MAPPING[deviceNumber], '-as', lightnumber, onOrOff], function(error, stdout, stderr) { 
+  execFile('sudo', [CLEWARE_CONTROL, '-c', '1', '-d', deviceNumber, '-as', lightnumber, onOrOff], function(error, stdout, stderr) { 
     console.log('Executing...');
     console.log(stderr);    
     console.log(stdout);

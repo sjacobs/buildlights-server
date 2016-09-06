@@ -1,6 +1,5 @@
 # buildlights-server
 
-<<<<<<< b2b6d9ddf05523ddf46f0d37b86445abae8c3169
 In our build envirnoment, we wanted to show the current build status of our pipeline on a hardware traffic build light. 
 
 ## Prerequisites
@@ -13,7 +12,7 @@ In our build envirnoment, we wanted to show the current build status of our pipe
 
 1. Checkout the repository
 2. Install the clewarecontrol tools downloaded from above (and make sure 'clewarecontrol' is in the PATH)
-2. Run start.sh. The server should startup on port 54321 by default
+2. Run start.sh as sudo(!). The server should startup on port 54321 by default
 
 To set the lights, just open a browser and trigger the URL:
 
@@ -31,17 +30,6 @@ To set the lights, just open a browser and trigger the URL:
 
 You can change the server port by providing a command line parameter to the start.sh script. e.g.
 
-    > ./start.sh 8181
+    > sudo ./start.sh 8181
     
 will start up the server on port 8181.
-
-
-=======
-Starten mit
-
-    > sudo ./start.sh
-
-Stoppen mit
- 
-    > ./stop.sh
->>>>>>> server startet jetzt per start.sh Skript im Hintergrund. Stop Skript hinzugefuegt

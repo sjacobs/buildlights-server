@@ -1,5 +1,6 @@
 # buildlights-server
 
+<<<<<<< b2b6d9ddf05523ddf46f0d37b86445abae8c3169
 In our build envirnoment, we wanted to show the current build status of our pipeline on a hardware traffic build light. 
 
 ## Prerequisites
@@ -35,3 +36,12 @@ You can change the server port by providing a command line parameter to the star
 will start up the server on port 8181.
 
 
+=======
+Starten mit
+
+    > sudo ./start.sh
+
+Stoppen mit
+ 
+    > ./stop.sh
+>>>>>>> server startet jetzt per start.sh Skript im Hintergrund. Stop Skript hinzugefuegt
